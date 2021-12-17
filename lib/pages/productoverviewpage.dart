@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:loja_completa/components/product_tile-item.dart';
-import 'package:loja_completa/data/dummy_data.dart';
 import 'package:loja_completa/models/product.dart';
+import 'package:loja_completa/models/product_list.dart';
+import 'package:provider/provider.dart';
 
 class Productoverviewpage extends StatelessWidget {
-  final List<Product> loadedProducts = dummyProducts;
-
   Productoverviewpage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<ProductList>(context);
+    final List<Product> loadedProducts = provider.itens;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
