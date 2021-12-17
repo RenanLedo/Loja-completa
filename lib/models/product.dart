@@ -1,10 +1,13 @@
-class Product {
+import 'package:flutter/cupertino.dart';
+
+class Product extends ChangeNotifier {
   String id;
   final String name;
   final String description;
   final double price;
   final String imageUrl;
   bool isFavorite;
+
   Product({
     required this.id,
     required this.name,
@@ -14,7 +17,8 @@ class Product {
     this.isFavorite = false,
   });
 
-  void togglefavorite(){
+  void togglefavorite() {
     isFavorite = !isFavorite;
+    notifyListeners();
   }
 }
