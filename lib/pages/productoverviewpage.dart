@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:loja_completa/components/product_grid.dart';
 
-class Productoverviewpage extends StatelessWidget {
+enum FiltroProduct {
+  All,
+  Favotitos,
+}
+
+class Productoverviewpage extends StatefulWidget {
   Productoverviewpage({Key? key}) : super(key: key);
 
+  @override
+  _ProductoverviewpageState createState() => _ProductoverviewpageState();
+}
+
+class _ProductoverviewpageState extends State<Productoverviewpage> {
+  bool _showFavorite = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,17 +25,26 @@ class Productoverviewpage extends StatelessWidget {
             itemBuilder: (_) => [
               PopupMenuItem(
                 child: Text('Somente Favoritos'),
-                value: 0,
+                value: FiltroProduct.Favotitos,
               ),
               PopupMenuItem(
                 child: Text('Todos'),
-                value: 1,
+                value: FiltroProduct.All,
               ),
             ],
-          )
+            onSelected: (FiltroProduct selecionado) {
+              setState(() {
+                if (selecionado == FiltroProduct.Favotitos) {
+                  _showFavorite = true;
+                } else if (selecionado == FiltroProduct.All) {
+                  _showFavorite = false;
+                }
+              });
+            },
+          ),
         ],
       ),
-      body: ProductGrid(),
+      body: ProductGrid(showFavorite: _showFavorite),
     );
   }
 }
