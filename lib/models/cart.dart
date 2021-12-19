@@ -15,7 +15,6 @@ class Cart extends ChangeNotifier {
     return _items.length;
   }
 
-
   double get totalAmount {
     double total = 0.0;
     _items.forEach((key, value) {
@@ -23,6 +22,8 @@ class Cart extends ChangeNotifier {
     });
     return total;
   }
+
+
 
   void addItem(Product product) {
     if (_items.containsKey(product.id)) {
@@ -34,6 +35,7 @@ class Cart extends ChangeNotifier {
           name: existeItem.name,
           quantidade: existeItem.quantidade + 1,
           price: existeItem.price,
+          imageUrl: existeItem.imageUrl,
         ),
       );
     } else {
@@ -45,6 +47,7 @@ class Cart extends ChangeNotifier {
           name: product.name,
           quantidade: 1,
           price: product.price,
+          imageUrl: product.imageUrl,
         ),
       );
     }

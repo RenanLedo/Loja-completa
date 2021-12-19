@@ -20,14 +20,19 @@ class _ProductoverviewpageState extends State<Productoverviewpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        label: Consumer<Cart>(
-          builder: (_, cart, __) {
-            return Text('Carrinho ${cart.itemCount.toString()}');
+      floatingActionButton: Align(
+        alignment: Alignment.bottomCenter,
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.of(context).pushNamed('/cart');
           },
+          label: Consumer<Cart>(
+            builder: (_, cart, __) {
+              return Text('Carrinho ${cart.itemCount.toString()}');
+            },
+          ),
+          icon: Icon(Icons.shopping_cart),
         ),
-        icon: Icon(Icons.shopping_cart),
       ),
       appBar: AppBar(
         title: const Text('Home'),
