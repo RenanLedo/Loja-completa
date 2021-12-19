@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loja_completa/components/product_grid.dart';
+import 'package:loja_completa/models/cart.dart';
+import 'package:provider/provider.dart';
 
 enum FiltroProduct {
   All,
@@ -18,6 +20,15 @@ class _ProductoverviewpageState extends State<Productoverviewpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {},
+        label: Consumer<Cart>(
+          builder: (_, cart, __) {
+            return Text('Carrinho ${cart.itemCount.toString()}');
+          },
+        ),
+        icon: Icon(Icons.shopping_cart),
+      ),
       appBar: AppBar(
         title: const Text('Home'),
         actions: [
