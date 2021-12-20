@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:loja_completa/models/cart.dart';
 import 'package:loja_completa/models/cart_item.dart';
+import 'package:provider/provider.dart';
 
 class ItemCartWidget extends StatelessWidget {
   final CartItem cart;
@@ -34,6 +36,13 @@ class ItemCartWidget extends StatelessWidget {
             ),
             Text(cart.name),
             Text('Total ${cart.price * cart.quantidade}'),
+            IconButton(
+              onPressed: () {
+                // cart.quant;
+                print(cart.quantidade);
+              },
+              icon: Icon(Icons.add),
+            ),
           ],
         ),
       ),

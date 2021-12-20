@@ -23,6 +23,13 @@ class Cart extends ChangeNotifier {
     return total;
   }
 
+  int get quant {
+    var quantItensCart;
+    _items.forEach((key, value) {
+     quantItensCart = value.quantidade;
+    });
+    return quantItensCart;
+  }
 
 
   void addItem(Product product) {

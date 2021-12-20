@@ -1,4 +1,6 @@
-class CartItem {
+import 'package:flutter/cupertino.dart';
+
+class CartItem{
   final String id;
   final String productId;
   final String name;
@@ -14,6 +16,11 @@ class CartItem {
     required this.quantidade,
     required this.price,
   });
+
+  // int get quant {
+  //   return quantidade - 1;
+    
+  // }
 
  
 }
