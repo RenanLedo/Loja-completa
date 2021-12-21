@@ -26,11 +26,10 @@ class Cart extends ChangeNotifier {
   int get quant {
     var quantItensCart;
     _items.forEach((key, value) {
-     quantItensCart = value.quantidade;
+      quantItensCart = value.quantidade;
     });
     return quantItensCart;
   }
-
 
   void addItem(Product product) {
     if (_items.containsKey(product.id)) {
@@ -60,6 +59,15 @@ class Cart extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  
+
+  // void acrescentar(int valor) {
+  //   _items.forEach((key, value) {
+  //     valor = value.quantidade + 1;
+  //   });
+  //   notifyListeners();
+  // }
 
   void removeItem(String productId) {
     _items.remove(productId);
