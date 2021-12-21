@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:loja_completa/components/product_grid.dart';
 import 'package:loja_completa/models/cart.dart';
 import 'package:loja_completa/models/product.dart';
 import 'package:loja_completa/utils/app_routes.dart';

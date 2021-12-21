@@ -14,7 +14,28 @@ class ProductDetalhePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(product.name),
       ),
-      body: Container(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              height: 300,
+              width: double.infinity,
+              child: Image.network(
+                product.imageUrl,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Text(
+              'R\$ ${product.price.toString()}',
+              style: TextStyle(
+                fontSize: 30,
+                color: Colors.black,
+              ),
+            ),
+            Text(product.description),
+          ],
+        ),
+      ),
     );
   }
 }
