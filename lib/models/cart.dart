@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -60,8 +61,6 @@ class Cart extends ChangeNotifier {
     notifyListeners();
   }
 
-  
-
   // void acrescentar(int valor) {
   //   _items.forEach((key, value) {
   //     valor = value.quantidade + 1;
@@ -71,6 +70,30 @@ class Cart extends ChangeNotifier {
 
   void removeItem(String productId) {
     _items.remove(productId);
+    notifyListeners();
+  }
+
+  void removeSingleItem(String productId) {
+    if (!_items.containsKey(productId)) {
+      return;
+    }
+
+    if (_items[productId]?.quantidade == 1) {
+      _items.remove(productId);
+    } else {
+      _items.update(
+        productId,
+        (existeItem) => CartItem(
+          id: existeItem.id,
+          productId: existeItem.productId,
+          name: existeItem.name,
+          quantidade: existeItem.quantidade - 1,
+          price: existeItem.price,
+          imageUrl: existeItem.imageUrl,
+        ),
+      );
+    }
+
     notifyListeners();
   }
 

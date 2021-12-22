@@ -44,6 +44,8 @@ class ItemCartWidget extends StatelessWidget {
               IconButton(
                   onPressed: () {
                     // cart.quant;
+                    Provider.of<Cart>(context, listen: false)
+                        .removeSingleItem(cart.productId);
 
                     print(cart.quantidade);
                   },
