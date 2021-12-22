@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loja_completa/components/app_drawer.dart';
 import 'package:loja_completa/components/product_grid.dart';
 import 'package:loja_completa/models/cart.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,7 @@ class _ProductoverviewpageState extends State<Productoverviewpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: AppDrawer(),
       floatingActionButton: Align(
         alignment: Alignment.bottomCenter,
         child: FloatingActionButton.extended(
