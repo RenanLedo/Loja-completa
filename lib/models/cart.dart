@@ -97,6 +97,26 @@ class Cart extends ChangeNotifier {
     notifyListeners();
   }
 
+  void addSingleItem(String productId) {
+    if (!_items.containsKey(productId)) {
+      return;
+    } else {
+      _items.update(
+        productId,
+        (existeItem) => CartItem(
+          id: existeItem.id,
+          productId: existeItem.productId,
+          name: existeItem.name,
+          quantidade: existeItem.quantidade + 1,
+          price: existeItem.price,
+          imageUrl: existeItem.imageUrl,
+        ),
+      );
+    }
+
+    notifyListeners();
+  }
+
   void clear() {
     _items = {};
     notifyListeners();

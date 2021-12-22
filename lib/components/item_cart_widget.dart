@@ -13,6 +13,7 @@ class ItemCartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var total = cart.price * cart.quantidade;
     return Dismissible(
       key: ValueKey(cart.id),
       onDismissed: (_) {
@@ -23,11 +24,12 @@ class ItemCartWidget extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(15),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(50),
                     child: Container(
                         width: 50,
                         height: 50,
@@ -36,22 +38,43 @@ class ItemCartWidget extends StatelessWidget {
                           fit: BoxFit.cover,
                         )),
                   ),
+                ],
+              ),
+              Column(
+                children: [
+                  Text(
+                    cart.name,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
                   Text('${cart.quantidade} x ${cart.price.toString()}'),
                 ],
               ),
-              Text(cart.name),
-              Text('Total ${cart.price * cart.quantidade}'),
-              IconButton(
-                  onPressed: () {
-                    // cart.quant;
-                    Provider.of<Cart>(context, listen: false)
-                        .removeSingleItem(cart.productId);
-
-                    print(cart.quantidade);
-                  },
-                  icon: Icon(
-                    Icons.remove_circle,
-                  )),
+              Text('Total ${total.toStringAsFixed(2)}'),
+              Row(
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        // cart.quant;
+                        Provider.of<Cart>(context, listen: false)
+                            .removeSingleItem(cart.productId);
+                      },
+                      icon: Icon(
+                        cart.quantidade == 1 ? Icons.delete : Icons.remove,
+                        color: Colors.red,
+                      )),
+                  Text(cart.quantidade.toString()),
+                  IconButton(
+                      onPressed: () {
+                        // cart.quant;
+                        Provider.of<Cart>(context, listen: false)
+                            .addSingleItem(cart.productId);
+                      },
+                      icon: Icon(
+                        Icons.add,
+                        color: Theme.of(context).primaryColor,
+                      )),
+                ],
+              ),
             ],
           ),
         ),

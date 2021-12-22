@@ -30,7 +30,7 @@ class CartPage extends StatelessWidget {
                     width: 20,
                   ),
                   Chip(
-                    label: Text('R\$ ${cart.totalAmount}'),
+                    label: Text('R\$ ${cart.totalAmount.toStringAsFixed(2)}'),
                   ),
                   Spacer(),
                   // Expanded(child: SizedBox()),
