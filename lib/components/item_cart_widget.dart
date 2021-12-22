@@ -16,11 +16,35 @@ class ItemCartWidget extends StatelessWidget {
     var total = cart.price * cart.quantidade;
     return Dismissible(
       key: ValueKey(cart.id),
+      confirmDismiss: (_) {
+        return showDialog<bool>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('Quer Excluir?'),
+            content:
+                Text('Tenha certeza que deseja excluir esse item do carrinho?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop(true);
+                },
+                child: Text('Excluir'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop(false);
+                },
+                child: Text('Cancelar'),
+              ),
+            ],
+          ),
+        );
+      },
       onDismissed: (_) {
         Provider.of<Cart>(context, listen: false).removeItem(cart.productId);
       },
       child: Card(
-        margin: EdgeInsets.all(15),
+        margin: EdgeInsets.symmetric(vertical: 4, horizontal: 15),
         child: Padding(
           padding: const EdgeInsets.all(15),
           child: Row(
