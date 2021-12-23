@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:loja_completa/models/product.dart';
 
 class ProductFormPage extends StatefulWidget {
   const ProductFormPage({Key? key}) : super(key: key);
@@ -11,6 +14,8 @@ class ProductFormPage extends StatefulWidget {
 class _ProductFormPageState extends State<ProductFormPage> {
   final urlFocus = FocusNode();
   final urlImageEC = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  final formData = Map<String, Object>();
 
   @override
   void initState() {
@@ -22,30 +27,61 @@ class _ProductFormPageState extends State<ProductFormPage> {
     setState(() {});
   }
 
+  void submitForm() {
+    formKey.currentState?.save();
+    final newProduct = Product(
+      id: Random().nextDouble().toString(),
+      name: formData['name'] as String,
+      description: formData['description'] as String,
+      price: formData['price'] as double,
+      imageUrl: formData['urlProduct'] as String,
+    );
+
+    print(newProduct.id);
+    print(newProduct.price);
+    print(newProduct.name);
+    print(newProduct.description);
+    print(newProduct.imageUrl);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Formulario do Produto'),
+        actions: [
+          IconButton(
+            onPressed: submitForm,
+            icon: Icon(
+              Icons.save,
+            ),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: Form(
+          key: formKey,
           child: ListView(
             children: [
               TextFormField(
                 decoration: InputDecoration(labelText: 'Nome do Produto'),
                 textInputAction: TextInputAction.next,
+                onSaved: (name) => formData['name'] = name ?? '',
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Preço'),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
+                onSaved: (price) =>
+                    formData['price'] = double.parse(price ?? '0'),
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Descrição do Produto'),
                 keyboardType: TextInputType.multiline,
                 maxLines: 6,
+                onSaved: (description) =>
+                    formData['description'] = description ?? '',
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -56,6 +92,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
                       keyboardType: TextInputType.url,
                       focusNode: urlFocus,
                       controller: urlImageEC,
+                      onSaved: (urlProduct) =>
+                          formData['urlProduct'] = urlProduct ?? '',
+                      onFieldSubmitted: (_) => submitForm(),
                     ),
                   ),
                   Container(
@@ -65,10 +104,10 @@ class _ProductFormPageState extends State<ProductFormPage> {
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey, width: 1),
                     ),
+                    alignment: Alignment.center,
                     child: urlImageEC.text.isEmpty
                         ? Text(
                             'Informa URL',
-                            textAlign: TextAlign.center,
                           )
                         : FittedBox(
                             child: Image.network(
