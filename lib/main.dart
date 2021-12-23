@@ -5,6 +5,8 @@ import 'package:loja_completa/models/product_list.dart';
 import 'package:loja_completa/pages/cart_page.dart';
 import 'package:loja_completa/pages/orders_pages.dart';
 import 'package:loja_completa/pages/product_detalhe_page.dart';
+import 'package:loja_completa/pages/product_form_page.dart';
+import 'package:loja_completa/pages/product_page.dart';
 import 'package:loja_completa/pages/productoverviewpage.dart';
 import 'package:loja_completa/utils/app_routes.dart';
 import 'package:provider/provider.dart';
@@ -43,6 +45,8 @@ class MyApp extends StatelessWidget {
           AppRoutes.PRODTUC_DETAIL: (ctx) => ProductDetalhePage(),
           AppRoutes.CART: (ctx) => CartPage(),
           AppRoutes.ORDER: (ctx) => OrdersPages(),
+          AppRoutes.PRODUCT_PAGE: (ctx) => ProductPage(),
+          AppRoutes.PRODUCT_FORM: (ctx) => ProductFormPage(),
         },
       ),
     );

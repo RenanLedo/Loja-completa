@@ -4,4 +4,6 @@ class AppRoutes {
   static const CART = '/cart'; 
   static const HOME = '/'; 
   static const ORDER = '/order'; 
+  static const PRODUCT_PAGE = '/product-page'; 
+  static const PRODUCT_FORM = '/product-form'; 
 }
