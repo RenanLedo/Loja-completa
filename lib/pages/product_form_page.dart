@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loja_completa/models/product.dart';
+import 'package:loja_completa/models/product_list.dart';
+import 'package:provider/provider.dart';
 
 class ProductFormPage extends StatefulWidget {
   const ProductFormPage({Key? key}) : super(key: key);
@@ -27,7 +29,21 @@ class _ProductFormPageState extends State<ProductFormPage> {
     setState(() {});
   }
 
+  bool isValidImageUrl(String url) {
+    bool isValidUrl = Uri.tryParse(url)?.hasAbsolutePath ?? false;
+    bool extensaoUrlValid = url.toLowerCase().endsWith('.png') ||
+        url.toLowerCase().endsWith('.jpg') ||
+        url.toLowerCase().endsWith('.jpeg');
+    return isValidUrl && extensaoUrlValid;
+  }
+
   void submitForm() {
+    final isValid = formKey.currentState?.validate() ?? false;
+
+    if (!isValid) {
+      return;
+    }
+
     formKey.currentState?.save();
     final newProduct = Product(
       id: Random().nextDouble().toString(),
@@ -37,11 +53,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
       imageUrl: formData['urlProduct'] as String,
     );
 
-    print(newProduct.id);
-    print(newProduct.price);
-    print(newProduct.name);
-    print(newProduct.description);
-    print(newProduct.imageUrl);
+    Provider.of<ProductList>(context, listen: false).addProduct(newProduct);
   }
 
   @override
@@ -68,6 +80,16 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 decoration: InputDecoration(labelText: 'Nome do Produto'),
                 textInputAction: TextInputAction.next,
                 onSaved: (name) => formData['name'] = name ?? '',
+                validator: (_name) {
+                  final name = _name ?? '';
+                  if (name.trim().isEmpty) {
+                    return 'O campo não pode ser vasio';
+                  }
+                  if (name.length < 3) {
+                    return 'O campo deve ter pelo menos 3 letras';
+                  }
+                  return null;
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Preço'),
@@ -75,6 +97,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
                 onSaved: (price) =>
                     formData['price'] = double.parse(price ?? '0'),
+                validator: (_price) {
+                  return null;
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Descrição do Produto'),
@@ -82,6 +107,16 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 maxLines: 6,
                 onSaved: (description) =>
                     formData['description'] = description ?? '',
+                validator: (_description) {
+                  final description = _description ?? '';
+                  if (description.trim().isEmpty) {
+                    return 'O campo não pode ser vasio';
+                  }
+                  if (description.length < 10) {
+                    return 'O campo deve ter pelo menos 10 letras';
+                  }
+                  return null;
+                },
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -95,6 +130,13 @@ class _ProductFormPageState extends State<ProductFormPage> {
                       onSaved: (urlProduct) =>
                           formData['urlProduct'] = urlProduct ?? '',
                       onFieldSubmitted: (_) => submitForm(),
+                      validator: (_imegeUrl) {
+                        final imageUrl = _imegeUrl ?? '';
+                        if (!isValidImageUrl(imageUrl)) {
+                          return 'URL inválida, extensões válidas : PNG, JPG ou JPEG';
+                        }
+                        return null;
+                      },
                     ),
                   ),
                   Container(
