@@ -27,7 +27,7 @@ class ProductPage extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.all(15),
         child: ListView.builder(
-          itemCount: product.itens.length,
+          itemCount: product.itemsCount,
           itemBuilder: (cts, i) => ProductTileGerenciadorWidget(
             product: product.itens[i],
           ),

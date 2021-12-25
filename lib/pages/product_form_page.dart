@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loja_completa/models/product.dart';
@@ -25,6 +23,24 @@ class _ProductFormPageState extends State<ProductFormPage> {
     super.initState();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (formData.isEmpty) {
+      final arg = ModalRoute.of(context)?.settings.arguments;
+      if (arg != null) {
+        final product = arg as Product;
+        formData['id'] = product.id;
+        formData['name'] = product.name;
+        formData['price'] = product.price;
+        formData['description'] = product.description;
+        formData['imageUrl'] = product.imageUrl;
+
+        urlImageEC.text = product.imageUrl;
+      }
+    }
+  }
+
   void updateImage() {
     setState(() {});
   }
@@ -45,15 +61,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
     }
 
     formKey.currentState?.save();
-    final newProduct = Product(
-      id: Random().nextDouble().toString(),
-      name: formData['name'] as String,
-      description: formData['description'] as String,
-      price: formData['price'] as double,
-      imageUrl: formData['urlProduct'] as String,
-    );
 
-    Provider.of<ProductList>(context, listen: false).addProduct(newProduct);
+    Provider.of<ProductList>(context, listen: false).saveProduct(formData);
+    Navigator.of(context).pop();
   }
 
   @override
@@ -77,6 +87,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
           child: ListView(
             children: [
               TextFormField(
+                initialValue: formData['name']?.toString(),
                 decoration: InputDecoration(labelText: 'Nome do Produto'),
                 textInputAction: TextInputAction.next,
                 onSaved: (name) => formData['name'] = name ?? '',
@@ -92,16 +103,24 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 },
               ),
               TextFormField(
+                initialValue: formData['price']?.toString(),
                 decoration: InputDecoration(labelText: 'Preço'),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
                 onSaved: (price) =>
                     formData['price'] = double.parse(price ?? '0'),
                 validator: (_price) {
+                  final priceString = _price ?? '';
+                  final price = double.tryParse(priceString) ?? -1;
+
+                  if (price <= 0) {
+                    return 'Informe um preço válido.';
+                  }
                   return null;
                 },
               ),
               TextFormField(
+                initialValue: formData['description']?.toString(),
                 decoration: InputDecoration(labelText: 'Descrição do Produto'),
                 keyboardType: TextInputType.multiline,
                 maxLines: 6,
@@ -127,8 +146,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
                       keyboardType: TextInputType.url,
                       focusNode: urlFocus,
                       controller: urlImageEC,
-                      onSaved: (urlProduct) =>
-                          formData['urlProduct'] = urlProduct ?? '',
+                      onSaved: (imageUrl) =>
+                          formData['imageUrl'] = imageUrl ?? '',
                       onFieldSubmitted: (_) => submitForm(),
                       validator: (_imegeUrl) {
                         final imageUrl = _imegeUrl ?? '';
