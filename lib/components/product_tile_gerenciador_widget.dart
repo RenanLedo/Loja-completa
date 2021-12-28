@@ -35,8 +35,30 @@ class ProductTileGerenciadorWidget extends StatelessWidget {
             ),
             IconButton(
               onPressed: () {
-                Provider.of<ProductList>(context, listen: false)
-                    .removeProduct(product);
+                showDialog<bool>(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: Text('Quer Excluir?'),
+                    content: Text(
+                        'Tenha certeza que deseja excluir esse produto definitivamente?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Provider.of<ProductList>(context, listen: false)
+                              .removeProduct(product);
+                          Navigator.of(ctx).pop(true);
+                        },
+                        child: Text('Excluir'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(ctx).pop(false);
+                        },
+                        child: Text('Cancelar'),
+                      ),
+                    ],
+                  ),
+                );
               },
               icon: Icon(
                 Icons.delete,
