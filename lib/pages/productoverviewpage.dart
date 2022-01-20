@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loja_completa/components/app_drawer.dart';
 import 'package:loja_completa/components/product_grid.dart';
 import 'package:loja_completa/models/cart.dart';
+import 'package:loja_completa/models/product_list.dart';
 import 'package:provider/provider.dart';
 
 enum FiltroProduct {
@@ -18,6 +19,20 @@ class Productoverviewpage extends StatefulWidget {
 
 class _ProductoverviewpageState extends State<Productoverviewpage> {
   bool _showFavorite = false;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<ProductList>(context, listen: false)
+        .loadProducts()
+        .then((value) {
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,7 +78,9 @@ class _ProductoverviewpageState extends State<Productoverviewpage> {
           ),
         ],
       ),
-      body: ProductGrid(showFavorite: _showFavorite),
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ProductGrid(showFavorite: _showFavorite),
     );
   }
 }

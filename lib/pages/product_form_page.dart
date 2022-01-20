@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loja_completa/models/product.dart';
 import 'package:loja_completa/models/product_list.dart';
