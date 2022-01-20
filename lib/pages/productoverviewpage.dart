@@ -23,8 +23,9 @@ class _ProductoverviewpageState extends State<Productoverviewpage> {
     return Scaffold(
       drawer: AppDrawer(),
       floatingActionButton: Align(
-        alignment: Alignment.bottomCenter,
+        alignment: Alignment.bottomRight,
         child: FloatingActionButton.extended(
+          elevation: 5,
           onPressed: () {
             Navigator.of(context).pushNamed('/cart');
           },
