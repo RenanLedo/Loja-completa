@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:loja_completa/exceptions/http_exception.dart';
 
 import 'package:loja_completa/models/product.dart';
 import 'package:loja_completa/models/product_list.dart';
@@ -14,6 +16,7 @@ class ProductTileGerenciadorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final msg = ScaffoldMessenger.of(context);
     return ListTile(
       leading: CircleAvatar(
         backgroundImage: NetworkImage(product.imageUrl),
@@ -34,6 +37,10 @@ class ProductTileGerenciadorWidget extends StatelessWidget {
               ),
             ),
             IconButton(
+              icon: Icon(
+                Icons.delete,
+                color: Colors.red,
+              ),
               onPressed: () {
                 showDialog<bool>(
                   context: context,
@@ -44,8 +51,6 @@ class ProductTileGerenciadorWidget extends StatelessWidget {
                     actions: [
                       TextButton(
                         onPressed: () {
-                          Provider.of<ProductList>(context, listen: false)
-                              .removeProduct(product);
                           Navigator.of(ctx).pop(true);
                         },
                         child: Text('Excluir'),
@@ -58,12 +63,24 @@ class ProductTileGerenciadorWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                );
+                ).then((value) async {
+                  if (value ?? false) {
+                    try {
+                      await Provider.of<ProductList>(
+                        context,
+                        listen: false,
+                      ).removeProduct(product);
+                    } on HttpException catch (error) {
+                      msg.showSnackBar(
+                        SnackBar(
+                          content: Text(error.toString()),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  }
+                });
               },
-              icon: Icon(
-                Icons.delete,
-                color: Colors.red,
-              ),
             ),
           ],
         ),

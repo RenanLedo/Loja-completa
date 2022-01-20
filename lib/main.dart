@@ -35,8 +35,10 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Loja Completa',
         theme: ThemeData(
-          primarySwatch: Colors.purple,
-          accentColor: Colors.amberAccent,
+          colorScheme: ColorScheme.fromSwatch(
+            primarySwatch: Colors.purple,
+            accentColor: Colors.amberAccent, // Your accent color
+          ),
           fontFamily: 'Lato',
         ),
         home: Productoverviewpage(),
