@@ -6,4 +6,5 @@ class AppRoutes {
   static const ORDER = '/order'; 
   static const PRODUCT_PAGE = '/product-page'; 
   static const PRODUCT_FORM = '/product-form'; 
+  static const LOGIN = '/login'; 
 }

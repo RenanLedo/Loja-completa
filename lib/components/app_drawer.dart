@@ -23,6 +23,15 @@ class AppDrawer extends StatelessWidget {
           ),
           Divider(),
           ListTile(
+            leading: Icon(Icons.person),
+            title: Text('Login'),
+            trailing: Icon(Icons.arrow_forward_ios_rounded),
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed(AppRoutes.LOGIN);
+            },
+          ),
+          Divider(),
+          ListTile(
             leading: Icon(Icons.shopping_bag),
             title: Text('Pedidos'),
             trailing: Icon(Icons.arrow_forward_ios_rounded),
