@@ -4,8 +4,23 @@ import 'package:loja_completa/components/order_widget.dart';
 import 'package:loja_completa/models/order_list.dart';
 import 'package:provider/provider.dart';
 
-class OrdersPages extends StatelessWidget {
+class OrdersPages extends StatefulWidget {
   const OrdersPages({Key? key}) : super(key: key);
+
+  @override
+  State<OrdersPages> createState() => _OrdersPagesState();
+}
+
+class _OrdersPagesState extends State<OrdersPages> {
+  bool _isloading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<OrderList>(context, listen: false).loadOrders().then((_) {
+      setState(() => _isloading = false);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +30,14 @@ class OrdersPages extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Pedidos'),
       ),
-      body: ListView.builder(
-        itemCount: orders.orderCount,
-        itemBuilder: (ctx, i) => OrderWidget(
-          order: orders.items[i],
-        ),
-      ),
+      body: _isloading
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: orders.orderCount,
+              itemBuilder: (ctx, i) => OrderWidget(
+                order: orders.items[i],
+              ),
+            ),
     );
   }
 }
