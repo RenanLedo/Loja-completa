@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:loja_completa/exceptions/auth_exception.dart';
+import 'package:loja_completa/models/auth.dart';
 import 'package:loja_completa/utils/app_routes.dart';
+import 'package:provider/provider.dart';
 
 enum AuthModo {
   Login,
@@ -24,22 +27,70 @@ class _LoginPageState extends State<LoginPage> {
     'senha': '',
   };
   final senhaEC = TextEditingController();
-  _submit() {
+
+  void _switchAuthMode() {
+    setState(() {
+      if (_isLogin()) {
+        _authModo = AuthModo.Cadastro;
+      } else {
+        _authModo = AuthModo.Login;
+      }
+    });
+  }
+
+  void _showErrorDialog(String msg) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(
+          'Ocorreu um Erro',
+          style: TextStyle(color: Colors.black),
+        ),
+        content: Text(
+          msg,
+          style: TextStyle(color: Colors.black),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('Fechar'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _submit() async {
     final isValido = formKey.currentState?.validate() ?? false;
 
-    if(!isValido){
+    if (!isValido) {
       return;
     }
 
     setState(() => _isLoading = true);
 
-formKey.currentState?.save();
+    formKey.currentState?.save();
 
-if(_isLogin()){
+    final auth = Provider.of<Auth>(context, listen: false);
 
-}else{
-  
-}
+    try {
+      if (_isLogin()) {
+        await auth.login(authData['email']!, authData['senha']!).then((value) {
+          Navigator.of(context).pushReplacementNamed(AppRoutes.HOME);
+        });
+      } else {
+        await auth
+            .cadastro(authData['email']!, authData['senha']!)
+            .then((value) {
+          Navigator.of(context).pushReplacementNamed(AppRoutes.HOME);
+        });
+      }
+    } on AuthException catch (error) {
+      _showErrorDialog(error.toString());
+    } catch (e) {
+      _showErrorDialog(
+          'Ocorreu um erro inesperado, tente novamente mais tarde.');
+    }
 
     setState(() => _isLoading = true);
   }
@@ -160,7 +211,7 @@ if(_isLogin()){
                                           )),
                               ),
                               TextButton(
-                                  onPressed: () {},
+                                  onPressed: _switchAuthMode,
                                   child: Text(_isLogin()
                                       ? 'Quero me Cadastrar'
                                       : 'Fazer Login')),

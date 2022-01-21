@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loja_completa/models/auth.dart';
 import 'package:loja_completa/models/cart.dart';
 import 'package:loja_completa/models/order_list.dart';
 import 'package:loja_completa/models/product_list.dart';
@@ -23,13 +24,22 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => ProductList(),
+          create: (_) => Auth(),
+        ),
+        ChangeNotifierProxyProvider<Auth, ProductList>(
+          create: (_) => ProductList('', []),
+          update: (ctx, auth, previous) {
+            return ProductList(auth.token ?? '', previous?.itens ?? []);
+          },
+        ),
+        ChangeNotifierProxyProvider<Auth, OrderList>(
+          create: (_) => OrderList('', []),
+          update: (ctx, auth, previous) {
+            return OrderList(auth.token ?? '', previous?.items ?? []);
+          },
         ),
         ChangeNotifierProvider(
           create: (_) => Cart(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => OrderList(),
         ),
       ],
       child: MaterialApp(

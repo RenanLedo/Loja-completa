@@ -8,21 +8,24 @@ import 'package:loja_completa/models/order.dart';
 import 'package:loja_completa/utils/constantes.dart';
 
 class OrderList extends ChangeNotifier {
+  String _token;
   List<Order> _items = [];
   List<Order> get items => [..._items];
+
+  OrderList(this._token, this._items);
 
   int get orderCount {
     return _items.length;
   }
 
   Future<void> loadOrders() async {
-    _items.clear();
-    final response =
-        await http.get(Uri.parse('${Constantes.ORDER_BASE_URL}.json'));
+    List<Order> items = [];
+    final response = await http
+        .get(Uri.parse('${Constantes.ORDER_BASE_URL}.json?auth=$_token'));
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
     data.forEach((orderId, orderData) {
-      _items.add(Order(
+      items.add(Order(
         id: orderId,
         date: DateTime.parse(orderData['date']),
         total: orderData['total'],
@@ -38,28 +41,28 @@ class OrderList extends ChangeNotifier {
         }).toList(),
       ));
     });
+    _items = items.reversed.toList();
     notifyListeners();
-    print(data);
   }
 
   Future<void> addOrder(Cart cart) async {
     final date = DateTime.now();
-    final response =
-        await http.post(Uri.parse('${Constantes.ORDER_BASE_URL}.json'),
-            body: jsonEncode({
-              'total': cart.totalAmount,
-              'date': date.toIso8601String(),
-              'product': cart.items.values
-                  .map((cartItem) => {
-                        'id': cartItem.id,
-                        'productId': cartItem.productId,
-                        'name': cartItem.name,
-                        'imageUrl': cartItem.imageUrl,
-                        'quantidade': cartItem.quantidade,
-                        'price': cartItem.price
-                      })
-                  .toList()
-            }));
+    final response = await http.post(
+        Uri.parse('${Constantes.ORDER_BASE_URL}.json?auth=$_token'),
+        body: jsonEncode({
+          'total': cart.totalAmount,
+          'date': date.toIso8601String(),
+          'product': cart.items.values
+              .map((cartItem) => {
+                    'id': cartItem.id,
+                    'productId': cartItem.productId,
+                    'name': cartItem.name,
+                    'imageUrl': cartItem.imageUrl,
+                    'quantidade': cartItem.quantidade,
+                    'price': cartItem.price
+                  })
+              .toList()
+        }));
     final id = jsonDecode(response.body)['name'];
     _items.insert(
         0,
