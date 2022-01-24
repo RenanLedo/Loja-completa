@@ -13,6 +13,8 @@ class ProductList extends ChangeNotifier {
   List<Product> _itens = [];
 
   List<Product> get itens => [..._itens];
+  List<Product> get favoriteItems =>
+      _itens.where((prod) => prod.isFavorite).toList();
   
 
   ProductList(this._token, this._itens, this._userId);
@@ -21,7 +23,7 @@ class ProductList extends ChangeNotifier {
     return _itens.length;
   }
 
-  get itensFavorite => null;
+  // get itensFavorite => null;
 
   Future<void> loadProducts() async {
     _itens.clear();

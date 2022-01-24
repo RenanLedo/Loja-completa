@@ -48,32 +48,35 @@ class ItemCartWidget extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(15),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Column(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: Container(
-                        width: 50,
-                        height: 50,
-                        child: Image.network(
-                          cart.imageUrl,
-                          fit: BoxFit.cover,
-                        )),
-                  ),
-                ],
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                    width: 80,
+                    height: 80,
+                    child: Image.network(
+                      cart.imageUrl,
+                      fit: BoxFit.cover,
+                    )),
               ),
-              Column(
-                children: [
-                  Text(
-                    cart.name,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  Text('${cart.quantidade} x ${cart.price.toString()}'),
-                ],
+              SizedBox(
+                width: 20,
               ),
-              Text('Total ${total.toStringAsFixed(2)}'),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      cart.name,
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    Text('${cart.quantidade} x ${cart.price.toString()}'),
+                    Text('Total ${total.toStringAsFixed(2)}'),
+                  ],
+                ),
+              ),
               Row(
                 children: [
                   IconButton(

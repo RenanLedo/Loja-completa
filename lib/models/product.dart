@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:loja_completa/utils/constantes.dart';
 
 class Product extends ChangeNotifier {
-  String id;
+  final String id;
   final String name;
   final String description;
   final double price;

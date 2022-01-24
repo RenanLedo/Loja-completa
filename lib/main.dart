@@ -42,11 +42,14 @@ class MyApp extends StatelessWidget {
             return OrderList(auth.token ?? '', previous?.items ?? []);
           },
         ),
-        ChangeNotifierProvider(
-          create: (_) => Cart(),
+        ChangeNotifierProxyProvider<Auth, CategoriaLista>(
+          create: (_) => CategoriaLista('', []),
+          update: (ctx, auth, previous) {
+            return CategoriaLista(auth.token ?? '', previous?.items ?? []);
+          },
         ),
         ChangeNotifierProvider(
-          create: (_) => CategoriaLista('', []),
+          create: (_) => Cart(),
         ),
       ],
       child: MaterialApp(
