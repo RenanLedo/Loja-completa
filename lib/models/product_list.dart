@@ -9,25 +9,38 @@ import 'package:loja_completa/utils/constantes.dart';
 
 class ProductList extends ChangeNotifier {
   String _token;
+  String _userId;
   List<Product> _itens = [];
 
   List<Product> get itens => [..._itens];
-  List<Product> get itensFavorite =>
-      _itens.where((prod) => prod.isFavorite).toList();
+  
 
-  ProductList(this._token, this._itens);
+  ProductList(this._token, this._itens, this._userId);
 
   int get itemsCount {
     return _itens.length;
   }
+
+  get itensFavorite => null;
 
   Future<void> loadProducts() async {
     _itens.clear();
     final response = await http
         .get(Uri.parse('${Constantes.PRODUCT_BASE_URL}.json?auth=$_token'));
     if (response.body == 'null') return;
+
+    final favResponse = await http.get(
+      Uri.parse('${Constantes.USER_FAVORITE_URL}/$_userId.json?auth=$_token'),
+    );
+
+    Map<String, dynamic> favData =
+        favResponse.body == 'null' ? {} : (jsonDecode(favResponse.body));
+
+    
+
     Map<String, dynamic> data = jsonDecode(response.body);
     data.forEach((productId, productData) {
+      final isFavorite = favData[productId] ?? false;
       _itens.add(
         Product(
           id: productId,
@@ -35,7 +48,7 @@ class ProductList extends ChangeNotifier {
           description: productData['description'],
           price: productData['price'],
           imageUrl: productData['imageUrl'],
-          isFavorite: productData['isFavorite'],
+          isFavorite: isFavorite,
         ),
       );
     });
@@ -68,7 +81,6 @@ class ProductList extends ChangeNotifier {
           'description': product.description,
           'price': product.price,
           'imageUrl': product.imageUrl,
-          'isFavorite': product.isFavorite
         }));
 
     final id = jsonDecode(response.body)['name'];
@@ -78,7 +90,6 @@ class ProductList extends ChangeNotifier {
       description: product.description,
       price: product.price,
       imageUrl: product.imageUrl,
-      isFavorite: product.isFavorite,
     ));
     notifyListeners();
   }

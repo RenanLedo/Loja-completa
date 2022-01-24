@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:loja_completa/models/auth.dart';
 import 'package:loja_completa/models/cart.dart';
+import 'package:loja_completa/models/categoria_lista.dart';
 import 'package:loja_completa/models/order_list.dart';
 import 'package:loja_completa/models/product_list.dart';
 import 'package:loja_completa/pages/cart_page.dart';
+import 'package:loja_completa/pages/categoria_form_page.dart';
+import 'package:loja_completa/pages/categorias_page.dart';
 import 'package:loja_completa/pages/login_page.dart';
 import 'package:loja_completa/pages/orders_pages.dart';
 import 'package:loja_completa/pages/product_detalhe_page.dart';
@@ -27,9 +30,10 @@ class MyApp extends StatelessWidget {
           create: (_) => Auth(),
         ),
         ChangeNotifierProxyProvider<Auth, ProductList>(
-          create: (_) => ProductList('', []),
+          create: (_) => ProductList('', [], ''),
           update: (ctx, auth, previous) {
-            return ProductList(auth.token ?? '', previous?.itens ?? []);
+            return ProductList(
+                auth.token ?? '', previous?.itens ?? [], auth.userId ?? '');
           },
         ),
         ChangeNotifierProxyProvider<Auth, OrderList>(
@@ -40,6 +44,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => Cart(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => CategoriaLista('', []),
         ),
       ],
       child: MaterialApp(
@@ -60,7 +67,9 @@ class MyApp extends StatelessWidget {
           AppRoutes.ORDER: (ctx) => OrdersPages(),
           AppRoutes.PRODUCT_PAGE: (ctx) => ProductPage(),
           AppRoutes.PRODUCT_FORM: (ctx) => ProductFormPage(),
+          AppRoutes.CAT_FORM: (ctx) => CategoriaFormPage(),
           AppRoutes.LOGIN: (ctx) => LoginPage(),
+          AppRoutes.CATEGORIAS: (ctx) => CategoriasPage(),
         },
       ),
     );

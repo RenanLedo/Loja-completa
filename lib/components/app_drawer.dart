@@ -50,6 +50,15 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           Divider(),
+          ListTile(
+            leading: Icon(Icons.edit),
+            title: Text('Categorias'),
+            trailing: Icon(Icons.arrow_forward_ios_rounded),
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed(AppRoutes.CATEGORIAS);
+            },
+          ),
+          Divider(),
         ],
       ),
     );
