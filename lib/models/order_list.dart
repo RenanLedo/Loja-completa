@@ -9,10 +9,11 @@ import 'package:loja_completa/utils/constantes.dart';
 
 class OrderList extends ChangeNotifier {
   String _token;
+  String _userId;
   List<Order> _items = [];
   List<Order> get items => [..._items];
 
-  OrderList(this._token, this._items);
+  OrderList(this._token, this._items, this._userId);
 
   int get orderCount {
     return _items.length;
@@ -20,8 +21,8 @@ class OrderList extends ChangeNotifier {
 
   Future<void> loadOrders() async {
     List<Order> items = [];
-    final response = await http
-        .get(Uri.parse('${Constantes.ORDER_BASE_URL}.json?auth=$_token'));
+    final response = await http.get(
+        Uri.parse('${Constantes.ORDER_BASE_URL}/$_userId.json?auth=$_token'));
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
     data.forEach((orderId, orderData) {
@@ -48,7 +49,7 @@ class OrderList extends ChangeNotifier {
   Future<void> addOrder(Cart cart) async {
     final date = DateTime.now();
     final response = await http.post(
-        Uri.parse('${Constantes.ORDER_BASE_URL}.json?auth=$_token'),
+        Uri.parse('${Constantes.ORDER_BASE_URL}/$_userId.json?auth=$_token'),
         body: jsonEncode({
           'total': cart.totalAmount,
           'date': date.toIso8601String(),

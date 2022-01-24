@@ -28,7 +28,7 @@ class ProductList extends ChangeNotifier {
   Future<void> loadProducts() async {
     _itens.clear();
     final response = await http
-        .get(Uri.parse('${Constantes.PRODUCT_BASE_URL}.json?auth=$_token'));
+        .get(Uri.parse('${Constantes.PRODUCT_BASE_URL}.json'));
     if (response.body == 'null') return;
 
     final favResponse = await http.get(

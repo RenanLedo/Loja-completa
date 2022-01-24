@@ -19,8 +19,8 @@ class CategoriaLista extends ChangeNotifier {
 
   Future<void> loadCategorias() async {
     _items.clear();
-    final response = await http
-        .get(Uri.parse('${Constantes.PRODUCT_CAT_URL}.json?auth=$_token'));
+    final response =
+        await http.get(Uri.parse('${Constantes.PRODUCT_CAT_URL}.json'));
     if (response.body == 'null') return;
 
     Map<String, dynamic> data = jsonDecode(response.body);

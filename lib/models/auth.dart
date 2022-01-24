@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:loja_completa/data/store.dart';
 import 'package:loja_completa/exceptions/auth_exception.dart';
 import 'package:loja_completa/utils/constantes.dart';
 
@@ -45,10 +46,16 @@ class Auth extends ChangeNotifier {
       _expiryDate = DateTime.now().add(
         Duration(seconds: int.parse(body['expiresIn'])),
       );
+
+      Store.saveMap('userData', {
+        'token' : _token,
+        'email' : _email,
+        'userId' : userId,
+        'expiryDate' : _expiryDate!.toIso8601String()
+      });
       notifyListeners();
     }
 
-    print(body);
   }
 
   Future<void> login(String email, String senha) async {
@@ -68,9 +75,40 @@ class Auth extends ChangeNotifier {
       _expiryDate = DateTime.now().add(
         Duration(seconds: int.parse(body['expiresIn'])),
       );
+
+      Store.saveMap('userData', {
+        'token' : _token,
+        'email' : _email,
+        'userId' : userId,
+        'expiryDate' : _expiryDate!.toIso8601String()
+      });
       notifyListeners();
     }
+  }
 
-    print(body);
+  Future<void> tryAutoLogin() async {
+    if (isAuth) return;
+
+    final userData = await Store.getMap('userData');
+
+    if (userData.isEmpty) return;
+
+    final expiryDate = DateTime.parse(userData['expiryDate']);
+    if (expiryDate.isBefore(DateTime.now())) return;
+
+    _token = userData['token'];
+    _email = userData['email'];
+    _userId = userData['userId'];
+    _expiryDate = expiryDate;
+
+    notifyListeners();
+  }
+
+  void deslogar() {
+    _token = null;
+    _email = null;
+    _userId = null;
+    _expiryDate = null;
+    notifyListeners();
   }
 }
